@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	tcp_ports   = []int{22, 80, 23, 445}
+	tcp_ports   = []int{22, 80, 23}
 	timeout     = 3 * time.Second
 	ip_start    = 1
 	ip_end      = 254
@@ -36,16 +36,18 @@ func analyze(target_host string) {
 
 func help() {
 	fmt.Println("check ports: tcp", tcp_ports)
-	println("usage: ./ipscan -h localhost")
-	println("usage: ./ipscan -h 192.168.11.2")
-	println("usage: ./ipscan -i 192.168.11.")
+	println("usage: ipscan -h [hostname|ip] [-p port_number]")
+	println("       ipscan -i 192.168.11. [-p port_number]")
 }
 
 func main() {
 
-	if len(os.Args) < 3 {
+	if len(os.Args) < 3 || len(os.Args) == 4 {
 		help()
 		return
+	} else if len(os.Args) == 5 {
+		supplement_port, _ := strconv.Atoi(os.Args[4])
+		tcp_ports = append(tcp_ports, supplement_port)
 	}
 
 	if os.Args[1] == "-h" {
